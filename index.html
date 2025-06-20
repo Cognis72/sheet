@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ฟอร์มส่งข้อมูลไป Google Sheet</title>
+  <style>
+    body {
+      background: #f0f4f8;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 30px;
+    }
+    .form-container {
+      background: white;
+      padding: 30px;
+      max-width: 400px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 14px;
+      background-color: #28a745;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>ส่งข้อมูลไป Google Sheet</h2>
+    <form id="myForm">
+      <input name="name" placeholder="ชื่อของคุณ" required /><br/>
+      <input name="email" type="email" placeholder="อีเมล" required /><br/>
+      <textarea name="message" placeholder="ข้อความ" rows="4" required></textarea><br/>
+      <button type="submit">ส่งข้อมูล</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("myForm");
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const data = {
+        name: form.name.value,
+        email: form.email.value,
+        message: form.message.value
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbxur8pwv9x7xa-w6BlaguwHBd7Eof6VzkM5UThF65RQ4TDrk74L1dgDVVA27zPi1rPsag/exec", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(res => res.json())
+        .then(res => {
+          alert("✅ ส่งข้อมูลสำเร็จ!");
+          form.reset();
+        })
+        .catch(err => {
+          alert("❌ เกิดข้อผิดพลาดในการส่งข้อมูล");
+          console.error(err);
+        });
+    });
+  </script>
+</body>
+</html>
