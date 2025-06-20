@@ -2,25 +2,25 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ฟอร์มส่งข้อมูลไป Google Sheet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Form to Google Sheet</title>
   <style>
     body {
-      background: #f0f4f8;
+      background: #eef2f5;
       font-family: 'Segoe UI', sans-serif;
-      padding: 30px;
+      padding: 20px;
+      margin: 0;
     }
-    .form-container {
-      background: white;
-      padding: 30px;
-      max-width: 400px;
+    .container {
+      max-width: 600px;
       margin: auto;
-      border-radius: 10px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
-    .form-container h2 {
+    h2 {
       text-align: center;
-      margin-bottom: 20px;
       color: #333;
     }
     input, textarea {
@@ -32,58 +32,74 @@
       font-size: 16px;
     }
     button {
-      margin-top: 20px;
       width: 100%;
-      padding: 14px;
-      background-color: #28a745;
-      border: none;
+      padding: 12px;
+      background: #28a745;
       color: white;
-      font-size: 16px;
+      border: none;
       border-radius: 6px;
+      font-size: 16px;
+      margin-top: 20px;
       cursor: pointer;
-      transition: 0.3s ease;
     }
     button:hover {
-      background-color: #218838;
+      background: #218838;
+    }
+    @media screen and (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="form-container">
-    <h2>ส่งข้อมูลไป Google Sheet</h2>
-    <form id="myForm">
-      <input name="name" placeholder="ชื่อของคุณ" required /><br/>
-      <input name="email" type="email" placeholder="อีเมล" required /><br/>
-      <textarea name="message" placeholder="ข้อความ" rows="4" required></textarea><br/>
-      <button type="submit">ส่งข้อมูล</button>
+  <div class="container">
+    <h2>Contact Form</h2>
+    <form id="contactForm">
+      <input type="text" name="firstName" placeholder="First Name" required />
+      <input type="text" name="lastName" placeholder="Last Name" required />
+      <input type="email" name="email" placeholder="Email Address" required />
+      <input type="tel" name="phone" placeholder="Phone Number" />
+      <input type="text" name="company" placeholder="Company" />
+      <input type="text" name="subject" placeholder="Subject" />
+      <textarea name="message" rows="4" placeholder="Message..." required></textarea>
+      <button type="submit">Submit</button>
     </form>
+    <p id="response"></p>
   </div>
 
   <script>
-    const form = document.getElementById("myForm");
-    form.addEventListener("submit", function(e) {
+    const form = document.getElementById("contactForm");
+    const responseEl = document.getElementById("response");
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyz4piArabBfcxTz2R3q3b5mqmWTHOzO7Gxiro1ZtGrjEVxe_jhS_MF3o-gQ6w9fcbQrA/exec"; // << ใส่ URL Google Apps Script ตรงนี้
+
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      const formData = new FormData(form);
       const data = {
-        name: form.name.value,
-        email: form.email.value,
-        message: form.message.value
+        firstName: formData.get("firstName"),
+        lastName: formData.get("lastName"),
+        email: formData.get("email"),
+        phone: formData.get("phone"),
+        company: formData.get("company"),
+        subject: formData.get("subject"),
+        message: formData.get("message")
       };
 
-      fetch("https://script.google.com/macros/s/AKfycbxur8pwv9x7xa-w6BlaguwHBd7Eof6VzkM5UThF65RQ4TDrk74L1dgDVVA27zPi1rPsag/exec", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(res => res.json())
-        .then(res => {
-          alert("✅ ส่งข้อมูลสำเร็จ!");
-          form.reset();
-        })
-        .catch(err => {
-          alert("❌ เกิดข้อผิดพลาดในการส่งข้อมูล");
-          console.error(err);
+      try {
+        await fetch(scriptURL, {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json"
+          }
         });
+        responseEl.innerText = "✅ ข้อมูลส่งเรียบร้อยแล้ว!";
+        form.reset();
+      } catch (error) {
+        responseEl.innerText = "❌ มีบางอย่างผิดพลาด ลองใหม่อีกครั้ง";
+        console.error("Error:", error);
+      }
     });
   </script>
 </body>
