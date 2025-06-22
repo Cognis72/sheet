@@ -11,6 +11,7 @@
   </style>
 </head>
 <body>
+
   <form id="myForm">
     <h2>Contact Form</h2>
     <input type="text" name="name" placeholder="Your name" required>
@@ -20,27 +21,24 @@
   </form>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwxvQxfFWdJAHR0EeRP6Ez8iHMm-miWiJNsbZtnOgm-johnhZ4A1CVAifIMFzOOC9GU0g/exec'; // แปะลิงก์ Web App URL ที่ได้จากขั้นตอนก่อน
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxJV1H-slhJeD5arukIgt5rFKt1ylfvyn3cqByPMf47n3n0tPvErh_AjtOthxbePP5Fug/exec';
+    const form = document.getElementById('myForm');
 
-    document.getElementById('myForm').addEventListener('submit', e => {
+    form.addEventListener('submit', e => {
       e.preventDefault();
-      const formData = new FormData(e.target);
-      const data = Object.fromEntries(formData.entries());
+      const formData = new FormData(form);
 
       fetch(scriptURL, {
         method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        body: formData
       })
-      .then(res => res.json())
       .then(response => {
         alert("ส่งข้อมูลเรียบร้อย!");
-        e.target.reset();
+        form.reset();
       })
       .catch(error => alert("เกิดข้อผิดพลาด: " + error.message));
     });
   </script>
+
 </body>
 </html>
