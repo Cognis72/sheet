@@ -11,7 +11,6 @@
   </style>
 </head>
 <body>
-
   <form id="myForm">
     <h2>Contact Form</h2>
     <input type="text" name="name" placeholder="Your name" required>
@@ -21,24 +20,28 @@
   </form>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxJV1H-slhJeD5arukIgt5rFKt1ylfvyn3cqByPMf47n3n0tPvErh_AjtOthxbePP5Fug/exec';
-    const form = document.getElementById('myForm');
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbxJV1H-slhJeD5arukIgt5rFKt1ylfvyn3cqByPMf47n3n0tPvErh_AjtOthxbePP5Fug/exec';
+  const form = document.getElementById('myForm');
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const formData = new FormData(form);
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const formData = new FormData(form);
 
-      fetch(scriptURL, {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => {
-        alert("ส่งข้อมูลเรียบร้อย!");
-        form.reset();
-      })
-      .catch(error => alert("เกิดข้อผิดพลาด: " + error.message));
-    });
-  </script>
+    fetch(scriptURL, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      alert("ส่งข้อมูลเรียบร้อย!");
+      form.reset();
+    })
+    .catch(error => alert("เกิดข้อผิดพลาด: " + error.message));
+  });
+</script>
+
+</body>
+</html>
+
 
 </body>
 </html>
